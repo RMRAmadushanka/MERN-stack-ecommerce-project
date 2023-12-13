@@ -3,13 +3,15 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import{ FaShoppingCart, FaUser} from 'react-icons/fa'
 import Nav from 'react-bootstrap/Nav';
+import { LinkContainer} from 'react-router-bootstrap'
 import NavDropdown from 'react-bootstrap/NavDropdown';
 const Header = () => {
   return (
     <header>
       <Navbar className="bg-body-tertiary" expand='md' collapseOnSelect>
         <Container>
-          <Navbar.Brand href="#home">
+          <LinkContainer to='/'>
+          <Navbar.Brand>
             <img
               alt=""
               src='/images/brandLogo.png'
@@ -18,11 +20,16 @@ const Header = () => {
               className="d-inline-block align-top"
             />{' '}
           </Navbar.Brand>
+          </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
+          <LinkContainer to='/'>
+            <Nav.Link>Home</Nav.Link>
+          </LinkContainer>
+          <LinkContainer to='/'>
+            <Nav.Link >Link</Nav.Link>
+            </LinkContainer>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
