@@ -12,7 +12,7 @@ const errorHandler = (err,req,res,next) =>{
         statusCode = 404;
     }
 
-    red.status(statusCode).json({
+    res.status(statusCode).json({
         message,
         stack: process.env.NODE_ENV === 'production'?'H':err.stack
     })
