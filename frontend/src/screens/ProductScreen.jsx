@@ -5,26 +5,20 @@ import { Link } from 'react-router-dom'
 import {Row, Col, Image, ListGroup, Card, Button, ListGroupItem} from 'react-bootstrap'
 import Rating from '../components/Rating'
 import axios from 'axios'
+import { useGetProductDetailsQuery } from '../slices/productsApiSlice'
+
 const ProductScreen = () => {
-    const [product, setProduct] = useState([]);
+    
     const {id: productId} = useParams();
 
-
-    useEffect(()=>{
-        const fetchProducts= async () =>{
-            const {data} = await axios.get(`http://localhost:5000/api/products/${productId}`);
-            setProduct(data)
-        }
-
-        fetchProducts()
-    },[productId])
+    const {data: product, isLoading, error} = useGetProductDetailsQuery(productId);
 
   return (
     <>
     <Link className='btn btn-light my-3' to='/'>
     Go back
     </Link>
-    <Row>
+    {isLoading ? (<div>Loading ..</div>) : error ? (<div>{error?.data?.message || error.error}</div>) :(<Row>
         <Col md={5}>
             <Image src={product.image} alt={product.name} fluid/>
         </Col>
@@ -74,7 +68,8 @@ const ProductScreen = () => {
             </ListGroup>
         </Card>
         </Col>
-    </Row>
+    </Row>)}
+    
     </>
   )
 }
