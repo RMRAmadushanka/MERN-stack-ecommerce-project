@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
-
+import Loader from "../components/Loader";
 import Product from "../components/Product";
 import { useGetProductsQuery } from "../slices/productsApiSlice";
+import Message from "../components/Message";
 
 const HomeScreen = () => {
-  const { data: products, isLoading, isError } = useGetProductsQuery();
+  const { data: products, isLoading, error } = useGetProductsQuery();
 
   return (
     <>
       {isLoading ? (
-        <h2>Loading...</h2>
-      ) : isError ? (
-        <div>isError.data?.message</div>
+        <Loader/>
+      ) : error ? (
+        <Message variant='Danger'>{error?.data?.message || error.error}</Message>
       ) : (
         <>
           <h1>Latest</h1>
