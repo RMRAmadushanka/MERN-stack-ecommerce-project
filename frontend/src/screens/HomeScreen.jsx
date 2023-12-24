@@ -11,9 +11,11 @@ const HomeScreen = () => {
   return (
     <>
       {isLoading ? (
-        <Loader/>
+        <Loader />
       ) : error ? (
-        <Message variant='Danger'>{error?.data?.message || error.error}</Message>
+        <Message variant="Danger">
+          {error?.data?.message || error.error}
+        </Message>
       ) : (
         <>
           <h1>Latest</h1>
