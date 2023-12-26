@@ -30,7 +30,7 @@ const Header = () => {
               <LinkContainer to="/">
                 <Nav.Link>Home</Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/">
+              <LinkContainer to="/cart">
                 <Nav.Link>
                   Cart
                   {cartItems.length > 0 && (
