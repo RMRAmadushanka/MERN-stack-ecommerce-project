@@ -6,11 +6,14 @@ const port = process.env.PORT;
 import { notFound, errorHandler } from "./middleware/errorHandler.js";
 
 import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/userRoutes.js"
 import cors from "cors";
 connectDB();
 const app = express();
 app.use(cors());
 app.use("/api/products", productRoutes);
+app.use("/api/users", userRoutes);
+
 app.use(notFound);
 app.use(errorHandler);
 
