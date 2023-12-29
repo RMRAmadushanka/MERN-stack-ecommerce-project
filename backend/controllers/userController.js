@@ -1,11 +1,22 @@
 import asyncHandler from "../middleware/asyncHandler.js";
-
+import User from '../models/userModel.js'
 
 //@desc auth user
 //@route POST /api/user/login
 //@access Public
 const authUser = asyncHandler(async (req, res) => {
-  res.send("auth user");
+  const {email, password} = req.body;
+
+  const user = await User.findOne({email});
+
+  if(user){
+    res.json({
+      _id:user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user
+    })
+  }
 });
 
 //@desc  Register user
