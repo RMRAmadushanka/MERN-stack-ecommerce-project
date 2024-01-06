@@ -40,6 +40,9 @@ const Header = () => {
                   )}
                 </Nav.Link>
               </LinkContainer>
+              <LinkContainer to="/login">
+                <Nav.Link>Sign In</Nav.Link>
+              </LinkContainer>
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">
