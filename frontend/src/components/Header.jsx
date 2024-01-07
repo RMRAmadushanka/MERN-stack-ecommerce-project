@@ -9,6 +9,10 @@ import { Badge } from "react-bootstrap";
 import { useSelector } from "react-redux";
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
+  const {userInfo} = useSelector((state) => state.auth)
+  const logoutHandker = (e) => {
+    
+  }
   return (
     <header>
       <Navbar className="bg-body-tertiary" expand="md" collapseOnSelect>
@@ -40,22 +44,21 @@ const Header = () => {
                   )}
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/login">
-                <Nav.Link>Sign In</Nav.Link>
-              </LinkContainer>
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+              {userInfo ? (   <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">
-                  Another action
+                  Profile
                 </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">
-                  Something
+                <NavDropdown.Item onClick={logoutHandker}>
+                  Log out
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  Separated link
-                </NavDropdown.Item>
-              </NavDropdown>
+                
+              </NavDropdown>):(  <LinkContainer to="/login">
+                <Nav.Link>Sign In</Nav.Link>
+              </LinkContainer>)}
+            
+           
             </Nav>
           </Navbar.Collapse>
         </Container>
