@@ -17,6 +17,10 @@ import { toast } from "react-toastify";
 
   const [login, { isLoading }] = useLoginMutation();
   const { userInfo } = useSelector((state) => state.auth);
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const redirect = sp.get("redirect") || "/";
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -28,9 +32,6 @@ import { toast } from "react-toastify";
     }
   };
 
-  const { search } = useLocation();
-  const sp = new URLSearchParams(search);
-  const redirect = sp.get("redirect") || "/";
 
   useEffect(() => {
     if (userInfo) {
