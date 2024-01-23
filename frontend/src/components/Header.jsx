@@ -8,8 +8,8 @@ import { LinkContainer } from "react-router-bootstrap";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { Badge } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useLogoutMutation } from "../slices/userApiSlice";
 import { logout } from "../slices/authSlice";
+import { useLogoutMutation } from "../slices/userApiSlice";
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);

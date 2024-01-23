@@ -5,21 +5,67 @@ import Order from "../models/orderModel.js";
 //@route GET /api/orders
 //@access Private
 const addOrderItems = asyncHandler(async (req, res) => {
-  res.json("add order Items");
+  console.log(req.body);
+  const {
+    orderItems,
+    shippingAddress,
+    paymentMethod,
+    itemsPrice,
+    taxPrice,
+    shippingPrice,
+    totalPrice,
+  } = req.body;
+
+  if (orderItems && orderItems.length == 0) {
+    res.status(400);
+    throw new Error("No order items");
+  } else {
+    const { user: userIdFromOrderItem, ...restOrderItem } = orderItems[0];
+
+
+    const order = new Order({
+      orderItems: [
+        {
+          ...restOrderItem,
+          product: restOrderItem._id,
+          _id: undefined,
+        },
+      ],
+      user: userIdFromOrderItem,
+      shippingAddress,
+      paymentMethod,
+      itemsPrice,
+      taxPrice,
+      shippingPrice,
+      totalPrice,
+    });
+    const createdOrder = await order.save();
+    res.status(201).json(createdOrder);
+  }
 });
 
 //@desc Get logged in user orders
 //@route GET /api/myOrders
 //@access Private
 const getMyOrders = asyncHandler(async (req, res) => {
-  res.json("get mu orders");
+  const orders = await Order.find({ user: req.user._id });
+  res.status(200).json(orders);
 });
 
 //@desc Get order by Id
 //@route GET /api/orders/:id
 //@access Private
 const getOrderById = asyncHandler(async (req, res) => {
-  res.json("get order by id");
+  const order = await Order.findById(req.params.id).populate(
+    "User",
+    "name email"
+  );
+  if (order) {
+    res.status(200).json(order);
+  } else {
+    res.status(400);
+    throw new Error("Order not found");
+  }
 });
 
 //@desc Update order to paid

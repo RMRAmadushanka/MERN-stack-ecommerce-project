@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 import {
   Row,
   Col,
@@ -28,7 +28,7 @@ const CartScreen = () => {
     dispacth(removeFromCart(id))
   }
   const checkouthandler = () => {
-    navigate('/login?redirect=/shipping')
+    navigate(`/login?redirect=/shipping`)
   }
 
   return (
@@ -42,7 +42,7 @@ const CartScreen = () => {
         ) : (
           <ListGroup>
             {cartItems.map((item) => (
-              <ListGroup.Item key={item.id}>
+              <ListGroup.Item key={item._id}>
                 <Row>
                   <Col md={2}>
                     <Image src={item.image} alt={item.name} fluid rounded />
