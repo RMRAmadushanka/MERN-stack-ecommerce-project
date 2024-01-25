@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
 import Message from "../components/Message";
 import { toast } from "react-toastify";
@@ -9,7 +10,7 @@ import {
   usePayOrderMutation,
   useGetPayPalClientIdQuery,
 } from "../slices/ordersApiSlice";
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+
 import { useSelector } from "react-redux";
 
 const OrderScreen = () => {
@@ -32,7 +33,7 @@ const OrderScreen = () => {
   } = useGetPayPalClientIdQuery();
 
   const { useInfo } = useSelector((state) => state.auth);
-
+  console.log("paypal",paypal);
   useEffect(() => {
     if (!errorPayPal && !loadingPayPal && paypal.clientId) {
       const loadPayPalScript = async () => {
@@ -53,10 +54,39 @@ const OrderScreen = () => {
     }
   }, [order, paypal, loadingPayPal, errorPayPal]);
 
-  function onApprove() {}
-  function onApproveTest() {}
-  function onError() {}
-  function createOrder() {}
+   function onApprove(data, actions) {
+    return actions.order.capture().then(async function (details) {
+      try {
+        await payOrder({ orderId, details });
+        refetch();
+        toast.success("Payment successfull");
+      } catch (err) {
+        toast.error(err?.data?.message || err?.message);
+      }
+    });
+  }
+  async function onApproveTest() {
+    await payOrder({ orderId, details: { payer: {} } });
+    refetch();
+    toast.success("Payment successfull");
+  }
+  function onError(err) {
+    toast.error(err.message);
+  }
+  function createOrder(data, actions) {
+    return actions.order.create({
+        purchase_units: [
+          {
+            amount: {
+              value: order.totalPrice,
+            },
+          },
+        ],
+      })
+      .then((orderId) => {
+        return orderId;
+      });
+  }
 
   return isLoading ? (
     <Loader />
