@@ -63,7 +63,7 @@ const Header = () => {
               {userInfo ? (
                 <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
                   <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.2">
+                  <NavDropdown.Item href="/profile">
                     Profile
                   </NavDropdown.Item>
                   <NavDropdown.Item onClick={logoutHandker}>
