@@ -9,6 +9,7 @@ import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
   useGetPayPalClientIdQuery,
+  useDeliverOrderMutation,
 } from "../slices/ordersApiSlice";
 
 import { useSelector } from "react-redux";
@@ -26,14 +27,17 @@ const OrderScreen = () => {
 
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
+  const [deliverOrder, { isLoading: loadingDeliver }] =
+    useDeliverOrderMutation();
+
   const {
     data: paypal,
     isLoading: loadingPayPal,
     error: errorPayPal,
   } = useGetPayPalClientIdQuery();
 
-  const { useInfo } = useSelector((state) => state.auth);
-  console.log("paypal",paypal);
+  const { userInfo } = useSelector((state) => state.auth);
+  console.log("paypal", paypal);
   useEffect(() => {
     if (!errorPayPal && !loadingPayPal && paypal.clientId) {
       const loadPayPalScript = async () => {
@@ -54,7 +58,7 @@ const OrderScreen = () => {
     }
   }, [order, paypal, loadingPayPal, errorPayPal]);
 
-   function onApprove(data, actions) {
+  function onApprove(data, actions) {
     return actions.order.capture().then(async function (details) {
       try {
         await payOrder({ orderId, details });
@@ -74,7 +78,8 @@ const OrderScreen = () => {
     toast.error(err.message);
   }
   function createOrder(data, actions) {
-    return actions.order.create({
+    return actions.order
+      .create({
         purchase_units: [
           {
             amount: {
@@ -88,6 +93,15 @@ const OrderScreen = () => {
       });
   }
 
+  const deliverOrderHandler = async() => {
+    try {
+      await deliverOrder(orderId)
+      refetch()
+      toast.success('Order delivered')
+    } catch (err) {
+      toast.error(err?.data?.message || err.message)
+    }
+  }
   return isLoading ? (
     <Loader />
   ) : error ? (
@@ -115,7 +129,7 @@ const OrderScreen = () => {
               </p>
               {order.isDeliverd ? (
                 <Message variant="success">
-                  Deleverd on {order.deliverdAt}
+                  Deleverd on {order.deliveredAt}
                 </Message>
               ) : (
                 <Message variant="danger">Not Delivered</Message>
@@ -201,6 +215,21 @@ const OrderScreen = () => {
                   )}
                 </ListGroup.Item>
               )}
+              {loadingDeliver && <Loader />}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDeliverd && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliverOrderHandler}
+                    >
+                      Mark as Delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>

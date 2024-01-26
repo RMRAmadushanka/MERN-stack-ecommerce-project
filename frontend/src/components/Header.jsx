@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
@@ -63,19 +63,21 @@ const Header = () => {
               {userInfo ? (
                 <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
                   <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                  <NavDropdown.Item href="/profile">
-                    Profile
-                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
                   <NavDropdown.Item onClick={logoutHandker}>
                     Log out
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
+                  {userInfo && userInfo.isAdmin && (
+                <><NavDropdown.Item href="/admin/orderlist">orders</NavDropdown.Item><NavDropdown.Item href="/admin/productslist">Products</NavDropdown.Item><NavDropdown.Item href="/admin/userslist">User</NavDropdown.Item></>
+              )}
                 </NavDropdown>
               ) : (
                 <LinkContainer to="/login">
                   <Nav.Link>Sign In</Nav.Link>
                 </LinkContainer>
               )}
+              
             </Nav>
           </Navbar.Collapse>
         </Container>
