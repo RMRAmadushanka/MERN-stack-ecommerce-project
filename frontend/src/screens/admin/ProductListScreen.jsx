@@ -1,5 +1,9 @@
 import React from "react";
-import { useCreateProductMutation, useGetProductsQuery } from "../../slices/productsApiSlice";
+import {
+  useCreateProductMutation,
+  useDeleteProductMutation,
+  useGetProductsQuery,
+} from "../../slices/productsApiSlice";
 import { Button, Col, Row, Table } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Loader from "../../components/Loader";
@@ -8,20 +12,33 @@ import { LinkContainer } from "react-router-bootstrap";
 import { toast } from "react-toastify";
 
 const ProductListScreen = () => {
-  const { data: products, isLoading,refetch, error } = useGetProductsQuery();
+  const { data: products, isLoading, refetch, error } = useGetProductsQuery();
+  const [deleteProduct, { isLoading: loadingDelete }] =
+    useDeleteProductMutation();
 
-  const [createProduct,{isLoading: loadingCreate}] = useCreateProductMutation();
-  const createProductHandler = async() => {
-    if (window.confirm('Are you sure you want to create a new Product?')) {
+  const [createProduct, { isLoading: loadingCreate }] =
+    useCreateProductMutation();
+  const createProductHandler = async () => {
+    if (window.confirm("Are you sure you want to create a new Product?")) {
       try {
         await createProduct();
-        refetch()
+        refetch();
       } catch (err) {
-        toast.error(err?.data?.message || err?.error)
+        toast.error(err?.data?.message || err?.error);
       }
     }
-  }
-  const deleteHandler =(id) => {}
+  };
+  const deleteHandler = async (id) => {
+    if (window.confirm("Are you sure")) {
+      try {
+        await deleteProduct(id);
+        refetch();
+        toast.success('Product deleted')
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
   console.log(products);
   return (
     <>
@@ -35,6 +52,8 @@ const ProductListScreen = () => {
           </Button>
         </Col>
       </Row>
+      {loadingCreate && <Loader />}
+      {loadingDelete && <Loader />}
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -64,9 +83,13 @@ const ProductListScreen = () => {
                         <FaEdit />
                       </Button>
                     </LinkContainer>
-                    <Button variant="danger" className="btn-sm mx-2" onClick={()=>deleteHandler(product._id)}>
-                        <FaTrash style={{color:'white'}} />
-                      </Button>
+                    <Button
+                      variant="danger"
+                      className="btn-sm mx-2"
+                      onClick={() => deleteHandler(product._id)}
+                    >
+                      <FaTrash style={{ color: "white" }} />
+                    </Button>
                   </td>
                 </tr>
               ))}

@@ -4,9 +4,11 @@ import { FaTimes } from "react-icons/fa";
 import { useGetOrdersQuery } from "../../slices/ordersApiSlice";
 import Loader from "../../components/Loader";
 import { Button, Table } from "react-bootstrap";
+import { useDeleteProductMutation } from "../../slices/productsApiSlice";
 
 const OrderListScreen = () => {
   const { data: orders, isLoading, error } = useGetOrdersQuery();
+
 
   return (
     <div>

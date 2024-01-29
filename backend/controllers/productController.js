@@ -67,4 +67,24 @@ const updateProduct = asyncHandler(async (req, res) => {
   
 });
 
-export { getProduct, getProducts, createProduct, updateProduct };
+
+
+//@desc Delete the product
+//@route DELETE /api/product/:id
+//@access Private
+const deleteProduct = asyncHandler(async (req, res) => {
+
+  const product = await Product.findById(req.params.id)
+
+  if(product) {
+    await Product.deleteOne({_id: product._id})
+    res.status(200).json({message:'Product deleted'})
+  } else {
+    res.status(404)
+    throw new Error('Resourse not found')
+  }
+
+  
+});
+
+export { deleteProduct, getProduct, getProducts, createProduct, updateProduct };
