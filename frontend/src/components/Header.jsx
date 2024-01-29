@@ -69,7 +69,7 @@ const Header = () => {
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
                   {userInfo && userInfo.isAdmin && (
-                <><NavDropdown.Item href="/admin/orderlist">orders</NavDropdown.Item><NavDropdown.Item href="/admin/productslist">Products</NavDropdown.Item><NavDropdown.Item href="/admin/userslist">User</NavDropdown.Item></>
+                <><NavDropdown.Item href="/admin/orderlist">orders</NavDropdown.Item><NavDropdown.Item href="/admin/productslist">Products</NavDropdown.Item><NavDropdown.Item href="admin/userlist">User</NavDropdown.Item></>
               )}
                 </NavDropdown>
               ) : (
