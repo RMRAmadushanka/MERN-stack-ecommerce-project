@@ -10,9 +10,14 @@ import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { LinkContainer } from "react-router-bootstrap";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
+import Paginate from "../../components/Paginate";
 
 const ProductListScreen = () => {
-  const { data: products, isLoading, refetch, error } = useGetProductsQuery();
+  const { pageNumber } = useParams();
+  const { data, isLoading, refetch, error } = useGetProductsQuery({
+    pageNumber
+  });
   const [deleteProduct, { isLoading: loadingDelete }] =
     useDeleteProductMutation();
 
@@ -33,13 +38,13 @@ const ProductListScreen = () => {
       try {
         await deleteProduct(id);
         refetch();
-        toast.success('Product deleted')
+        toast.success("Product deleted");
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
     }
   };
-  console.log(products);
+
   return (
     <>
       <Row>
@@ -70,7 +75,7 @@ const ProductListScreen = () => {
             </thead>
 
             <tbody>
-              {products.map((product) => (
+              {data?.products?.map((product) => (
                 <tr key={product._id}>
                   <td>{product._id}</td>
                   <td>{product.name}</td>
@@ -95,6 +100,7 @@ const ProductListScreen = () => {
               ))}
             </tbody>
           </Table>
+          <Paginate pages={data.pages} page={data.page} isAdmin={true} />
         </>
       )}
     </>

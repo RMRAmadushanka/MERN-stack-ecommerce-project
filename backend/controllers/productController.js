@@ -5,8 +5,15 @@ import Product from "../models/productModel.js";
 //@route GET /api/products
 //@access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({});
-  res.json(products);
+  const pageSize = 2;
+  const page = Number(req.query.pageNumber);
+  const keyword = req.query.keyword ? {name: {$regex: req.query.keyword, $options:'i'}}:{}
+  const count = await Product.countDocuments({...keyword});
+  const products = await Product.find({...keyword})
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
 //@desc Fetch a products
@@ -84,7 +91,8 @@ const deleteProduct = asyncHandler(async (req, res) => {
 //@route POST /api/product/:id/reviwes
 //@access Private
 const createProductReview = asyncHandler(async (req, res) => {
-  const { rating, comment } = req.body;
+  console.log("req.userInfo.name", req.body.userInfo.name);
+  const { rating, comment, userInfo } = req.body;
   const product = await Product.findById(req.params.id);
 
   if (product) {
@@ -96,10 +104,10 @@ const createProductReview = asyncHandler(async (req, res) => {
       throw new Error("Product already reviewed");
     }
     const review = {
-      name: req.user.name,
+      name: req.body.userInfo.name,
       rating: Number(rating),
       comment,
-      user: req.user._id,
+      user: req.body.userInfo._id,
     };
     product.reviews.push(review);
     product.numReviews = product.reviews.length;
@@ -116,4 +124,11 @@ const createProductReview = asyncHandler(async (req, res) => {
   }
 });
 
-export { deleteProduct, getProduct, getProducts, createProduct, updateProduct, createProductReview };
+export {
+  deleteProduct,
+  getProduct,
+  getProducts,
+  createProduct,
+  updateProduct,
+  createProductReview,
+};
