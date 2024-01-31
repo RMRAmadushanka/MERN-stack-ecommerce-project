@@ -22,6 +22,7 @@ import Message from "../components/Message";
 import { addTOcart } from "../slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Meta from "../components/Meta";
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
@@ -67,6 +68,7 @@ console.log("usernaem", userInfo.name);
   }
   return (
     <>
+   
       <Link className="btn btn-light my-3" to="/">
         Go back
       </Link>
@@ -78,6 +80,7 @@ console.log("usernaem", userInfo.name);
         </Message>
       ) : (
         <>
+         <Meta  title={product.name}/>
           <Row>
             <Col md={5}>
               <Image src={product.image} alt={product.name} fluid />
